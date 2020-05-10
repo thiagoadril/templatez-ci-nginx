@@ -87,7 +87,7 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
-								    sh 'NETWORK_NAME=template_app_nginx_production && chmod +x docker/scripts/configure-network.sh && ./docker/scripts/configure-network.sh'
+								    sh 'NETWORK_NAME=template_app_nginx_production && cd docker/scripts/ && chmod +x configure-network.sh && ./configure-network.sh'
 									sh 'cp docker/env/docker-env-production.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_app_nginx_${imagesuffix} up -d"
 									break
