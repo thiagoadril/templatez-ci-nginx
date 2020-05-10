@@ -89,29 +89,28 @@ pipeline {
 								  case "master":
 								    sh 'NETWORK_NAME=template_app_nginx_production'
 									sh 'chmod 777 ./docker/scripts/configure-network.sh'
-									sh 'ls'
-									sh './docker/scripts/configure-network.sh'
+									sh 'sh ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-production.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_app_nginx_${imagesuffix} up -d"
 									break
 								  case "staging":
 								  	sh 'NETWORK_NAME=template_app_nginx_staging'
 									sh 'chmod 777 ./docker/scripts/configure-network.sh'
-									sh './docker/scripts/configure-network.sh'
+									sh 'sh ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-staging.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name template_app_nginx_staging up -d"
 									break
 								  case "testing":
 								  	sh 'NETWORK_NAME=template_app_nginx_testing'
 									sh 'chmod 777 ./docker/scripts/configure-network.sh'
-									sh './docker/scripts/configure-network.sh'
+									sh 'sh ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-testing.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name template_app_nginx_testing up -d"
 									break
 								  case "develop":
 								  	sh 'NETWORK_NAME=template_app_nginx_development'
 									sh 'chmod 777 ./docker/scripts/configure-network.sh'
-									sh './docker/scripts/configure-network.sh'
+									sh 'sh ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-development.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name template_app_nginx_development up -d"
 									break;
