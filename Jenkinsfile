@@ -87,24 +87,24 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
-									sh 'docker network ls|grep template_nginx_production > /dev/null || docker network create --driver bridge template_nginx_production'
+									sh 'docker network ls|grep company_template_nginx_production > /dev/null || docker network create --driver bridge company_template_nginx_production'
 									sh 'cp docker/env/docker-env-production.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_nginx_${imagesuffix} up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name company_template_nginx_${imagesuffix} up -d"
 									break
 								  case "staging":
-									sh 'docker network ls|grep template_nginx_staging > /dev/null || docker network create --driver bridge template_nginx_staging'
+									sh 'docker network ls|grep company_template_nginx_staging > /dev/null || docker network create --driver bridge company_template_nginx_staging'
 									sh 'cp docker/env/docker-env-staging.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name template_nginx_staging up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name company_template_nginx_staging up -d"
 									break
 								  case "testing":
-									sh 'docker network ls|grep template_nginx_testing > /dev/null || docker network create --driver bridge template_nginx_testing'
+									sh 'docker network ls|grep company_template_nginx_testing > /dev/null || docker network create --driver bridge company_template_nginx_testing'
 									sh 'cp docker/env/docker-env-testing.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name template_nginx_testing up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name company_template_nginx_testing up -d"
 									break
 								  case "develop":
-									sh 'docker network ls|grep template_nginx_development > /dev/null || docker network create --driver bridge template_nginx_development'
+									sh 'docker network ls|grep company_template_nginx_development > /dev/null || docker network create --driver bridge company_template_nginx_development'
 									sh 'cp docker/env/docker-env-development.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name template_nginx_development up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name company_template_nginx_development up -d"
 									break;
 								}
 							}

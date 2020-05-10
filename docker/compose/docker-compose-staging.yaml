@@ -2,9 +2,9 @@ version: '3'
 services:
   template_nginx:
     networks: 
-      template_nginx_staging:
+      company_template_nginx_staging:
         aliases:
           - templatecinginx
 networks:
-  template_nginx_staging:
+  company_template_nginx_staging:
     external: true

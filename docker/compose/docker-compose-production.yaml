@@ -2,9 +2,9 @@ version: '3'
 services:
   template_nginx:
     networks: 
-      template_nginx_production:
+      company_template_nginx_production:
         aliases:
           - templatecinginx
 networks:
-  template_nginx_production:
+  company_template_nginx_production:
     external: true
