@@ -6,4 +6,4 @@ services:
       restart_policy:
         condition: always
     ports: 
-      - '${EXTERNAL_FRONTEND_PORT}:80'
+      - '80:${APP_FRONTEND_PORT}'
