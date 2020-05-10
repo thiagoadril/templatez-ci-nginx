@@ -1,0 +1,10 @@
+version: '3'
+services:
+  template_frontend:
+    networks: 
+      template_frontend_production:
+        aliases:
+          - templatecifront
+networks:
+  template_frontend_production:
+    external: true

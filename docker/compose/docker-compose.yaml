@@ -1,0 +1,9 @@
+version: '3'
+services:
+  template_frontend:
+    image: 'company_template_frontend_${IMAGE_SUFFIX}'
+    deploy:
+      restart_policy:
+        condition: always
+    ports: 
+      - '${EXTERNAL_FRONTEND_PORT}:80'
