@@ -88,7 +88,7 @@ pipeline {
 								switch(env.BRANCH_NAME) {
 								  case "master":
 									sh	'''
-										if [ -z $(docker network ls --filter name='^template_app_nginx_production$' --format="{{ .Name }}") ] ; then
+										if [ -z $(docker network ls --filter name='^template_app_nginx_production$') ] ; then
 											docker network create --driver bridge template_app_nginx_production
 										fi
 										'''
