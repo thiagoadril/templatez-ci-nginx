@@ -53,14 +53,14 @@ pipeline {
 				script {
 					if(env.BRANCH_NAME.contains('master')) {
 						docker.withTool('Default') {
-							def baseimage = docker.image('node:12.16.1')
+							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
 							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${FOLDER_APP_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					} else {
 						docker.withTool('Default') {
-							def baseimage = docker.image('node:12.16.1')
+							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
 							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${FOLDER_APP_NAME}/ci/image/")
 							image.tag("latest");
