@@ -34,9 +34,7 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'IO starting...'
 				script {
-					//Aplicações
-					fileOperations([folderCopyOperation(destinationFolderPath: "${FOLDER_APP_NAME}/ci/image/build", sourceFolderPath: "${FOLDER_APP_NAME}/build/")])
-					fileOperations([folderCopyOperation(destinationFolderPath: "${FOLDER_APP_NAME}/ci/image/deploy", sourceFolderPath: "${FOLDER_APP_NAME}/tools/deploy/")])
+					fileOperations([folderCopyOperation(destinationFolderPath: "${FOLDER_APP_NAME}/ci/image/deploy", sourceFolderPath: "${FOLDER_APP_NAME}/nginx")])
 					fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: "${FOLDER_APP_NAME}/Dockerfile*", targetLocation: "${FOLDER_APP_NAME}/ci/image")])
 				}
 				echo '-----------------------------------'

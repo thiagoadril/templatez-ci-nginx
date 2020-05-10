@@ -7,4 +7,4 @@ services:
           - templatecinginx
 networks:
   template_nginx_development:
-   external: true
+    external: true
