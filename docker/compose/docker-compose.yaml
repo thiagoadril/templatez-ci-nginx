@@ -1,6 +1,6 @@
 version: '3'
 services:
-  template_nginx:
+  nginx:
     image: 'company_template_nginx_${IMAGE_SUFFIX}'
     deploy:
       restart_policy:
