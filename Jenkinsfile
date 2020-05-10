@@ -7,7 +7,7 @@ pipeline {
 		stage('INIT') {
             steps{
                 script{
-                    FOLDER_APP_NAME="nginx"
+                    FOLDER_APP_NAME="app"
                 }
             }                
         }
