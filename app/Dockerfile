@@ -2,7 +2,7 @@ FROM nginx:1.17.9-alpine AS Nginx
 
 WORKDIR /app
 
-COPY /nginx.conf /etc/nginx/nginx.conf
+COPY /deploy/nginx.conf /etc/nginx/nginx.conf
 
 #RUN rm -rf /etc/localtime && ln -s /usr/share/zoneinfo/Brazil/East /etc/localtime
 
