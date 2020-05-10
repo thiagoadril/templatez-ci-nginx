@@ -1,7 +1,7 @@
 version: '3'
 services:
-  template_frontend:
-    image: 'company_template_frontend_${IMAGE_SUFFIX}'
+  template_nginx:
+    image: 'company_template_nginx_${IMAGE_SUFFIX}'
     deploy:
       restart_policy:
         condition: always

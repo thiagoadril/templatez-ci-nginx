@@ -1,10 +1,10 @@
 version: '3'
 services:
-  template_frontend:
+  template_nginx:
     networks: 
-      template_frontend_staging:
+      template_nginx_staging:
         aliases:
-          - templatecifront
+          - templatecinginx
 networks:
-  template_frontend_staging:
+  template_nginx_staging:
     external: true

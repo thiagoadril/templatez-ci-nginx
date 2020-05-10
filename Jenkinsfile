@@ -55,14 +55,14 @@ pipeline {
 						docker.withTool('Default') {
 							def baseimage = docker.image('node:12.16.1')
 							baseimage.pull()
-							def image = docker.build("company_template_frontend_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${FOLDER_APP_NAME}/ci/image/")
+							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${FOLDER_APP_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					} else {
 						docker.withTool('Default') {
 							def baseimage = docker.image('node:12.16.1')
 							baseimage.pull()
-							def image = docker.build("company_template_frontend_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${FOLDER_APP_NAME}/ci/image/")
+							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${FOLDER_APP_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					}
@@ -89,20 +89,24 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
+								    sh 'NETWORK_NAME=production && ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-production.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_app_frontend_${imagesuffix} up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_app_nginx_${imagesuffix} up -d"
 									break
 								  case "staging":
+								  	sh 'NETWORK_NAME=staging && ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-staging.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name template_app_frontend_staging up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name template_app_nginx_staging up -d"
 									break
 								  case "testing":
+								  	sh 'NETWORK_NAME=testing && ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-testing.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name template_app_frontend_testing up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name template_app_nginx_testing up -d"
 									break
 								  case "develop":
+								  	sh 'NETWORK_NAME=development && ./docker/scripts/configure-network.sh'
 									sh 'cp docker/env/docker-env-development.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name template_app_frontend_development up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name template_app_nginx_development up -d"
 									break;
 								}
 							}
