@@ -1,1 +1,2 @@
-# templatez-ci-nginx
+# Templatez CI [Nginx]
+**Nginx** application template with continuous integration.
