@@ -87,7 +87,10 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
-								    sh 'NETWORK_NAME=template_app_nginx_production && cd ./docker/scripts/ && chmod +x ./configure-network.sh && ./configure-network.sh'
+								    sh 'NETWORK_NAME=template_app_nginx_production'
+									sh 'if [ -z $(docker network ls --filter name=^$NETWORK_NAME --format="{{ .Name }}") ] ; then \'
+											docker network create --driver bridge $NETWORK_NAME \'
+										fi'
 									sh 'cp docker/env/docker-env-production.env .env'
 									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name template_app_nginx_${imagesuffix} up -d"
 									break
