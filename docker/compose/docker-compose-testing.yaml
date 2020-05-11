@@ -2,9 +2,9 @@ version: '3'
 services:
   nginx:
     networks: 
-      company_network_nginx_staging:
+      company_templatez_network_nginx_staging:
         aliases:
           - nginxtesting
 networks:
-  company_network_nginx_staging:
+  company_templatez_network_nginx_staging:
     external: true

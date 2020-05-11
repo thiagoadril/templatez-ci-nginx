@@ -2,9 +2,9 @@ version: '3'
 services:
   nginx:
     networks: 
-      company_network_nginx_development:
+      company_templatez_network_nginx_development:
         aliases:
           - nginxdevelopment
 networks:
-  company_network_nginx_development:
+  company_templatez_network_nginx_development:
     external: true

@@ -2,9 +2,9 @@ version: '3'
 services:
   nginx:
     networks: 
-      company_network_nginx_production:
+      company_templatez_network_nginx_production:
         aliases:
           - nginxproduction
 networks:
-  company_network_nginx_production:
+  company_templatez_network_nginx_production:
     external: true

@@ -10,9 +10,9 @@ pipeline {
 		stage('INIT') {
             steps{
                 script{
-					PROJECT_NAME="templatz_nginx"
+					PROJECT_NAME="templatez_nginx"
 					IMAGE_NAME="company_templatez_nginx"
-					NETWORK_NAME="company_network_nginx"
+					NETWORK_NAME="company_templatez_network_nginx"
                     APP_FOLDER_NAME="app"
                 }
             }                
