@@ -1,4 +1,7 @@
-def FOLDER_APP_NAME
+def PROJECT_NAME
+def IMAGE_NAME
+def NETWORK_NAME
+def APP_FOLDER_NAME
 
 pipeline {
     agent any
@@ -7,7 +10,10 @@ pipeline {
 		stage('INIT') {
             steps{
                 script{
-                    FOLDER_APP_NAME="app"
+					PROJECT_NAME="templatz_nginx"
+					IMAGE_NAME="company_templatez_nginx"
+					NETWORK_NAME="company_network_nginx"
+                    APP_FOLDER_NAME="app"
                 }
             }                
         }
@@ -20,7 +26,7 @@ pipeline {
 				echo "-----------------------------------"
 				echo 'Initial cleaning running....'
 				script {
-					fileOperations([folderDeleteOperation("${FOLDER_APP_NAME}/ci")])
+					fileOperations([folderDeleteOperation("${APP_FOLDER_NAME}/ci")])
 				}
 				echo '-----------------------------------'
 			}
@@ -34,8 +40,8 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'IO starting...'
 				script {
-					fileOperations([folderCopyOperation(destinationFolderPath: "${FOLDER_APP_NAME}/ci/image/deploy", sourceFolderPath: "${FOLDER_APP_NAME}/nginx")])
-					fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: "${FOLDER_APP_NAME}/Dockerfile*", targetLocation: "${FOLDER_APP_NAME}/ci/image")])
+					fileOperations([folderCopyOperation(destinationFolderPath: "${APP_FOLDER_NAME}/ci/image/deploy", sourceFolderPath: "${APP_FOLDER_NAME}/nginx")])
+					fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: "${APP_FOLDER_NAME}/Dockerfile*", targetLocation: "${APP_FOLDER_NAME}/ci/image")])
 				}
 				echo '-----------------------------------'
 			}
@@ -53,14 +59,14 @@ pipeline {
 						docker.withTool('Default') {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${FOLDER_APP_NAME}/ci/image/")
+							def image = docker.build("${IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${APP_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					} else {
 						docker.withTool('Default') {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("company_template_nginx_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${FOLDER_APP_NAME}/ci/image/")
+							def image = docker.build("${IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${APP_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					}
@@ -87,24 +93,24 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
-									sh 'docker network ls|grep company_network_nginx_production > /dev/null || docker network create --driver bridge company_network_nginx_production'
-									sh 'cp docker/env/docker-env-production.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name company_template_nginx_${imagesuffix} up -d"
+									sh "docker network ls|grep ${NETWORK_NAME}_production > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_production"
+									sh "cp docker/env/docker-env-production.env .env"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name ${PROJECT_NAME}_${imagesuffix} up -d"
 									break
 								  case "staging":
-									sh 'docker network ls|grep company_network_nginx_staging > /dev/null || docker network create --driver bridge company_network_nginx_staging'
-									sh 'cp docker/env/docker-env-staging.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name company_template_nginx_staging up -d"
+									sh "docker network ls|grep ${NETWORK_NAME}_staging > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_staging"
+									sh "cp docker/env/docker-env-staging.env .env"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name ${PROJECT_NAME}_staging up -d"
 									break
 								  case "testing":
-									sh 'docker network ls|grep company_network_nginx_testing > /dev/null || docker network create --driver bridge company_network_nginx_testing'
-									sh 'cp docker/env/docker-env-testing.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name company_template_nginx_testing up -d"
+									sh "docker network ls|grep ${NETWORK_NAME}_testing > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_testing"
+									sh "cp docker/env/docker-env-testing.env .env"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name ${PROJECT_NAME}_testing up -d"
 									break
 								  case "develop":
-									sh 'docker network ls|grep company_network_nginx_development > /dev/null || docker network create --driver bridge company_network_nginx_development'
-									sh 'cp docker/env/docker-env-development.env .env'
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name company_template_nginx_development up -d"
+									sh "docker network ls|grep ${NETWORK_NAME}_development > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_development"
+									sh "cp docker/env/docker-env-development.env .env"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name ${PROJECT_NAME}_development up -d"
 									break;
 								}
 							}
@@ -123,7 +129,7 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'End cleaning running....'
 				script {
-					fileOperations([folderDeleteOperation("${FOLDER_APP_NAME}/ci")])
+					fileOperations([folderDeleteOperation("${APP_FOLDER_NAME}/ci")])
 				}
 				echo '-----------------------------------'
 			}
