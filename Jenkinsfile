@@ -1,7 +1,8 @@
+def DOCKER_TOOL_NAME
+def BASE_FOLDER_NAME
 def APP_PROJECT_NAME
 def APP_IMAGE_NAME
 def APP_NETWORK_NAME
-def APP_FOLDER_NAME
 
 pipeline {
     agent any
@@ -9,11 +10,12 @@ pipeline {
     stages { 
 		stage('INIT') {
             steps{
-                script{
+                script {
+					DOCKER_TOOL_NAME="Default"
+                    BASE_FOLDER_NAME="app"
 					APP_PROJECT_NAME="templatez_nginx"
 					APP_IMAGE_NAME="company_templatez_nginx"
 					APP_NETWORK_NAME="company_templatez_network_nginx"
-                    APP_FOLDER_NAME="app"
                 }
             }                
         }
@@ -26,7 +28,7 @@ pipeline {
 				echo "-----------------------------------"
 				echo 'Initial cleaning running....'
 				script {
-					fileOperations([folderDeleteOperation("${APP_FOLDER_NAME}/ci")])
+					fileOperations([folderDeleteOperation("${BASE_FOLDER_NAME}/ci")])
 				}
 				echo '-----------------------------------'
 			}
@@ -40,8 +42,8 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'IO starting...'
 				script {
-					fileOperations([folderCopyOperation(destinationFolderPath: "${APP_FOLDER_NAME}/ci/image/deploy", sourceFolderPath: "${APP_FOLDER_NAME}/nginx")])
-					fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: "${APP_FOLDER_NAME}/Dockerfile*", targetLocation: "${APP_FOLDER_NAME}/ci/image")])
+					fileOperations([folderCopyOperation(destinationFolderPath: "${BASE_FOLDER_NAME}/ci/image/deploy", sourceFolderPath: "${BASE_FOLDER_NAME}/nginx")])
+					fileOperations([fileCopyOperation(excludes: '', flattenFiles: true, includes: "${BASE_FOLDER_NAME}/Dockerfile*", targetLocation: "${BASE_FOLDER_NAME}/ci/image")])
 				}
 				echo '-----------------------------------'
 			}
@@ -56,17 +58,17 @@ pipeline {
 				echo 'Generating app image...'
 				script {
 					if(env.BRANCH_NAME.contains('master')) {
-						docker.withTool('Default') {
+						docker.withTool(DOCKER_TOOL_NAME) {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${APP_FOLDER_NAME}/ci/image/")
+							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${BASE_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					} else {
-						docker.withTool('Default') {
+						docker.withTool(DOCKER_TOOL_NAME) {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${APP_FOLDER_NAME}/ci/image/")
+							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${BASE_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					}
@@ -83,13 +85,13 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'Configure application environment...'
 				script {
-					docker.withTool('Default') {
+					docker.withTool(DOCKER_TOOL_NAME) {
 						
 						def imagesuffix  = "${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}"
 						def image = docker.image('docker/compose:1.23.2')
 						image.pull()
 						
-						withDockerContainer(args: '--entrypoint=\'\'', image: 'docker/compose:1.23.2', toolName: 'Default') {
+						withDockerContainer(args: '--entrypoint=\'\'', image: 'docker/compose:1.23.2', toolName: DOCKER_TOOL_NAME) {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
@@ -129,7 +131,7 @@ pipeline {
 				echo '-----------------------------------'
 				echo 'End cleaning running....'
 				script {
-					fileOperations([folderDeleteOperation("${APP_FOLDER_NAME}/ci")])
+					fileOperations([folderDeleteOperation("${BASE_FOLDER_NAME}/ci")])
 				}
 				echo '-----------------------------------'
 			}
