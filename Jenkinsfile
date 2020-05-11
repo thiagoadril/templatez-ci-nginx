@@ -1,6 +1,6 @@
-def PROJECT_NAME
-def IMAGE_NAME
-def NETWORK_NAME
+def APP_PROJECT_NAME
+def APP_IMAGE_NAME
+def APP_NETWORK_NAME
 def APP_FOLDER_NAME
 
 pipeline {
@@ -10,9 +10,9 @@ pipeline {
 		stage('INIT') {
             steps{
                 script{
-					PROJECT_NAME="templatez_nginx"
-					IMAGE_NAME="company_templatez_nginx"
-					NETWORK_NAME="company_templatez_network_nginx"
+					APP_PROJECT_NAME="templatez_nginx"
+					APP_IMAGE_NAME="company_templatez_nginx"
+					APP_NETWORK_NAME="company_templatez_network_nginx"
                     APP_FOLDER_NAME="app"
                 }
             }                
@@ -59,14 +59,14 @@ pipeline {
 						docker.withTool('Default') {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("${IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${APP_FOLDER_NAME}/ci/image/")
+							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}:${env.BUILD_ID}","${APP_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					} else {
 						docker.withTool('Default') {
 							def baseimage = docker.image('nginx:1.17.9-alpine')
 							baseimage.pull()
-							def image = docker.build("${IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${APP_FOLDER_NAME}/ci/image/")
+							def image = docker.build("${APP_IMAGE_NAME}_${env.BRANCH_NAME.replace('feature/','').replace('release/','').toLowerCase()}","${APP_FOLDER_NAME}/ci/image/")
 							image.tag("latest");
 						}
 					}
@@ -93,24 +93,24 @@ pipeline {
 							withEnv(["IMAGE_SUFFIX=${imagesuffix}"]) {
 								switch(env.BRANCH_NAME) {
 								  case "master":
-									sh "docker network ls|grep ${NETWORK_NAME}_production > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_production"
+									sh "docker network ls|grep ${APP_NETWORK_NAME}_production > /dev/null || docker network create --driver bridge ${APP_NETWORK_NAME}_production"
 									sh "cp docker/env/docker-env-production.env .env"
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name ${PROJECT_NAME}_${imagesuffix} up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-production.yaml --project-name ${APP_PROJECT_NAME}_${imagesuffix} up -d"
 									break
 								  case "staging":
-									sh "docker network ls|grep ${NETWORK_NAME}_staging > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_staging"
+									sh "docker network ls|grep ${APP_NETWORK_NAME}_staging > /dev/null || docker network create --driver bridge ${APP_NETWORK_NAME}_staging"
 									sh "cp docker/env/docker-env-staging.env .env"
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name ${PROJECT_NAME}_staging up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-staging.yaml --project-name ${APP_PROJECT_NAME}_staging up -d"
 									break
 								  case "testing":
-									sh "docker network ls|grep ${NETWORK_NAME}_testing > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_testing"
+									sh "docker network ls|grep ${APP_NETWORK_NAME}_testing > /dev/null || docker network create --driver bridge ${APP_NETWORK_NAME}_testing"
 									sh "cp docker/env/docker-env-testing.env .env"
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name ${PROJECT_NAME}_testing up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-testing.yaml --project-name ${APP_PROJECT_NAME}_testing up -d"
 									break
 								  case "develop":
-									sh "docker network ls|grep ${NETWORK_NAME}_development > /dev/null || docker network create --driver bridge ${NETWORK_NAME}_development"
+									sh "docker network ls|grep ${APP_NETWORK_NAME}_development > /dev/null || docker network create --driver bridge ${APP_NETWORK_NAME}_development"
 									sh "cp docker/env/docker-env-development.env .env"
-									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name ${PROJECT_NAME}_development up -d"
+									sh "docker-compose -f docker/compose/docker-compose.yaml -f docker/compose/docker-compose-development.yaml --project-name ${APP_PROJECT_NAME}_development up -d"
 									break;
 								}
 							}
