@@ -1,12 +1,18 @@
 version: '3.7'
 services:
   nginx:
-    links:
-      - frontendproduction
+    links: 
+      - company_templatez_frontend
     networks: 
       company_templatez_network_nginx_production:
         aliases:
           - nginxproduction
+  
+  company_templatez_frontend:
+    networks: 
+      company_templatez_network_frontend_production:
+        aliases:
+          - frontendproduction
 networks:
   company_templatez_network_nginx_production:
     external: true
