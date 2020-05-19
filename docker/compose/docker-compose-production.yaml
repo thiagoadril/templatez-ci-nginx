@@ -6,7 +6,7 @@ services:
         aliases:
           - nginxproduction
     links:
-      - "company_templatez_frontend:frontenddevelopment"
+      - "frontenddevelopment"
 networks:
   company_templatez_network_nginx_production:
     external: true
