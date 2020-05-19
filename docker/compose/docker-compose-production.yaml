@@ -5,8 +5,6 @@ services:
       company_templatez_network_nginx_production:
         aliases:
           - nginxproduction
-    links:
-      - "frontenddevelopment"
 networks:
   company_templatez_network_nginx_production:
     external: true
